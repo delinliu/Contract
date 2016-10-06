@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.sjtu.se.reins.contract.mapper.ContractMapper">
+
+	<select id="getDict" resultType="map">
+		select * from ${tableName};
+	</select>
+	
+	<insert id="createContract"  useGeneratedKeys="true" keyProperty="ContractID">
+		insert into contract(CreatedUsername, Number, Name, FinancialFlow, IsForeignContract,
+			Description, SubjectObjects, SubjectObjectOther, FundsType,
+			Departments, Operator, ProjectNumber, BudgetNumber,
+			Money, Currency, StartDate, EndDate, TargetCompanyName,
+			ArchiveMaterials, ArchiveMaterialOther, State)
+		values(#{CreatedUsername}, #{Number}, #{Name}, #{FinancialFlow}, #{IsForeignContract},
+			#{Description}, #{SubjectObjects}, #{SubjectObjectOther}, #{FundsType},
+			#{Departments}, #{Operator}, #{ProjectNumber}, #{BudgetNumber},
+			#{Money}, #{Currency}, #{StartDate}, #{EndDate}, #{TargetCompanyName},
+			#{ArchiveMaterials}, #{ArchiveMaterialOther}, 0);
+	</insert>
+	
+	<update id="updateContract">
+		update contract
+		set CreatedUsername=#{CreatedUsername},
+			Number=#{Number},
+			Name=#{Name},
+			FinancialFlow=#{FinancialFlow},
+			IsForeignContract=#{IsForeignContract},
+			Description=#{Description},
+			SubjectObjects=#{SubjectObjects},
+			SubjectObjectOther=#{SubjectObjectOther},
+			FundsType=#{FundsType},
+			Departments=#{Departments},
+			Operator=#{Operator},
+			ProjectNumber=#{ProjectNumber},
+			BudgetNumber=#{BudgetNumber},
+			Money=#{Money},
+			Currency=#{Currency},
+			StartDate=#{StartDate},
+			EndDate=#{EndDate},
+			TargetCompanyName=#{TargetCompanyName},
+			ArchiveMaterials=#{ArchiveMaterials},
+			ArchiveMaterialOther=#{ArchiveMaterialOther},
+			State=#{State}
+		where ContractID = #{ContractID}
+	</update>
+
+	<select id="getContracts" resultType="map">
+		select ContractID, Number, Name, Operator,
+			PreRegisterContractManager, PreRegisterProjectManager,
+			FormalRegisterContractManager, FormalRegisterProjectManager
+		from contract;
+	</select>
+
+	<select id="getContract" resultType="map">
+		select * from contract
+		where ContractID=#{ContractID};
+	</select>
+
+	<select id="getContractByState" resultType="map">
+		select * from contract
+		where State=#{State};
+	</select>
+
+	<select id="getContractByStateAndOperator" resultType="map">
+		select * from contract
+		where State=#{State} and (Operator=#{Operator} or CreatedUsername=#{Operator});
+	</select>
+	
+	<insert id="createPayNode">
+		insert into paynode(ContractID,Type,ExpectedMoney,ExpectedCurrency,
+			PayCondition,PayDate,PayCredential,ActualMoney,
+			ActualCurrency,PayType,IsCredentialFiled,Composition)
+		values(#{ContractID},#{Type},#{ExpectedMoney},#{ExpectedCurrency},
+			#{PayCondition},#{PayDate},#{PayCredential},#{ActualMoney},
+			#{ActualCurrency},#{PayType},#{IsCredentialFiled},#{Composition});
+	</insert>
+	
+	<insert id="createReceiveNode">
+		insert into receivenode(ContractID,Type,ExpectedMoney,ExpectedCurrency,
+			ReceiveCondition,ReceiveDate,ActualMoney,ActualCurrency,InvoiceState)
+		values(#{ContractID},#{Type},#{ExpectedMoney},#{ExpectedCurrency},
+			#{ReceiveCondition},#{ReceiveDate},#{ActualMoney},#{ActualCurrency},#{InvoiceState});
+	</insert>
+	<select id="getPayNodes" resultType="map">
+		select * from paynode
+		where ContractID=#{ContractID};
+	</select>
+	<select id="getReceiveNodes" resultType="map">
+		select * from receivenode
+		where ContractID=#{ContractID};
+	</select>
+	
+	<update id="updatePreRegisterContractManagerComments">
+		update contract
+		set PreRegisterContractManagerComments=#{Comments},
+			PreRegisterContractManager=#{Username},
+			State=#{State}
+		where ContractID=#{ContractID};
+	</update>
+	<update id="updatePreRegisterProjectManagerComments">
+		update contract
+		set PreRegisterProjectManagerComments=#{Comments},
+			PreRegisterProjectManager=#{Username},
+			State=#{State}
+		where ContractID=#{ContractID};
+	</update>
+	<update id="updateFormalRegisterContractManagerComments">
+		update contract
+		set FormalRegisterContractManagerComments=#{Comments},
+			FormalRegisterContractManager=#{Username},
+			State=#{State}
+		where ContractID=#{ContractID};
+	</update>
+	<update id="updateFormalRegisterProjectManagerComments">
+		update contract
+		set FormalRegisterProjectManagerComments=#{Comments},
+			FormalRegisterProjectManager=#{Username},
+			State=#{State}
+		where ContractID=#{ContractID};
+	</update>
+	
+	<select id="getFirstPayNode" resultType="map">
+		select *
+		from paynode
+		where paynode.State = #{State} and paynode.ContractID = #{ContractID}
+		order by PayDate asc
+		limit 1;
+	</select>
+	
+	<update id="updatePayNodeState">
+		update paynode
+		set State = #{State}
+		where PayNodeID = #{PayNodeID}
+	</update>
+	
+	<select id="getFirstReceiveNode" resultType="map">
+		select *
+		from receivenode
+		where receivenode.State = #{State} and receivenode.ContractID = #{ContractID}
+		order by ReceiveDate asc
+		limit 1;
+	</select>
+	
+	<update id="updateReceiveNodeState">
+		update receivenode
+		set State = #{State}
+		where ReceiveNodeID = #{ReceiveNodeID}
+	</update>
+	
+	<select id="getPayNodeByStateAndOperator" resultType="map">
+		select contract.ContractID, contract.Number, contract.Name, contract.Operator,
+			paynode.*
+		from paynode
+		left join contract on contract.ContractID=paynode.ContractID
+		where paynode.State=#{State} and (contract.Operator=#{Operator} or contract.CreatedUsername=#{Operator});
+	</select>
+	
+	<select id="getReceiveNodeByStateAndOperator" resultType="map">
+		select contract.ContractID, contract.Number, contract.Name, contract.Operator,
+			receivenode.*
+		from receivenode
+		left join contract on contract.ContractID=receivenode.ContractID
+		where receivenode.State=#{State} and (contract.Operator=#{Operator} or contract.CreatedUsername=#{Operator});
+	</select>
+	<update id="updatePayNode">
+		update paynode
+		set ActualMoney=#{ActualMoney},
+			ActualCurrency=#{ActualCurrency},
+			PayType=#{PayType},
+			IsCredentialFiled=#{IsCredentialFiled},
+			Composition=#{Composition},
+			CreatedTime=now()
+		where PayNodeID=#{PayNodeID};
+	</update>
+	<update id="updateReceiveNode">
+		update receivenode
+		set ActualMoney=#{ActualMoney},
+			ActualCurrency=#{ActualCurrency},
+			InvoiceState=#{InvoiceState},
+			InvoiceTime=now()
+		where ReceiveNodeID=#{ReceiveNodeID};
+	</update>
+</mapper>

@@ -1,0 +1,46 @@
+<?xml  version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security 
+		http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<bean id="myLoginManager" class="cn.edu.sjtu.se.reins.contract.admin.MyLoginManager"></bean>
+	<security:authentication-manager>
+		<security:authentication-provider
+			user-service-ref="myLoginManager">
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+	<security:http auto-config=" true " use-expressions="true">
+		<security:intercept-url pattern="/create-contract"
+			access="!hasRole('ROLE_ANONYMOUS')" />
+		<security:intercept-url pattern="/list-contracts"
+			access="!hasRole('ROLE_ANONYMOUS')" />
+		<security:intercept-url pattern="/view-contract/*"
+			access="!hasRole('ROLE_ANONYMOUS')" />
+		<security:intercept-url pattern="/get-contracts"
+			access="!hasRole('ROLE_ANONYMOUS')" />
+		<security:intercept-url pattern="/get-contract"
+			access="!hasRole('ROLE_ANONYMOUS')" />
+		<security:intercept-url pattern="/comment-contract"
+			access="!hasRole('ROLE_ANONYMOUS')" />
+		<security:intercept-url pattern="/comment-contract/*"
+			access="!hasRole('ROLE_ANONYMOUS')" />
+		<security:intercept-url pattern="/js/**"
+			access="permitAll" />
+		<security:intercept-url pattern="/css/**"
+			access="permitAll" />
+		<security:intercept-url pattern="/test.json"
+			access="permitAll" />
+		<security:intercept-url pattern="/logout"
+			access="permitAll" />
+		<security:intercept-url pattern="/**" access="!hasRole('ROLE_ANONYMOUS')" />
+
+		<security:form-login default-target-url="/index"></security:form-login>
+
+		<security:csrf disabled="true" />
+	</security:http>
+</beans>

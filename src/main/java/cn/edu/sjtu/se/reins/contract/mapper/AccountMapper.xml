@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.sjtu.se.reins.contract.mapper.AccountMapper">
+
+	<select id="getAccount" resultType="map">
+		select EmployeeNumber as Username, LoginPassword as Password, EmployeeEmail as Email
+		from employee
+		where EmployeeNumber=#{Username};
+	</select>
+	
+	<select id="getRoles" resultType="map">
+		select contract_role.RoleName from contract_role
+		left join account_role_rel
+		on contract_role.RoleID = account_role_rel.RoleID
+		where account_role_rel.EmployeeNumber = #{Username};
+	</select>
+	
+</mapper>

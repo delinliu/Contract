@@ -1,0 +1,1 @@
+在mysql中首先运行615.sql，然后运行contract.sql，初始化数据库完毕。

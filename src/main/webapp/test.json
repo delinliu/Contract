@@ -1,0 +1,114 @@
+{
+	"Number": "CM-00000-2000-0000",
+	"Name": "Contract Name",
+	"FinancialFlow": 0,
+	"IsForeignContract": false,
+	"Description": "Description",
+	"SubjectObjects": [
+		{
+			"SubjectObjectNumber": 0
+		},
+		{
+			"SubjectObjectNumber": 2
+		}
+	],
+	"SubjectObjectOther": "Other",
+	"FundsType": 0,
+	"Departments": [
+		{
+			"DepartmentNumber": 0
+		},
+		{
+			"DepartmentNumber": 1
+		}
+	],
+	"Operator": "Operator",
+	"ProjectNumber": "PM-00000-2000-000",
+	"BudgetNumber": "BM-00000-2000-0000",
+	"Money": "1,000,000.00",
+	"Currency": 0,
+	"StartDate": "2010-01-01",
+	"EndDate": "2010-01-01",
+	"TargetCompanyName": "Name",
+	"ArchiveMaterials": [
+		{
+			"ArchiveMaterialNumber": 0
+		},
+		{
+			"ArchiveMaterialNumber": 1
+		}
+	],
+	"ArchiveMaterialOther": "Other",
+	"PayTimes": [
+		{
+			"Type": 3,
+			"ExpectedMoney": "1,000,000.00",
+			"ExpectedCurrency": 0,
+			"PayCondition": "Condition",
+			"PayDate": "2010-01-11",
+			"PayCredential": "Credential",
+			"ActualMoney": "1,000,000.00",
+			"ActualCurrency": 0,
+			"PayType": 0,
+			"CreatedTime": "2010-01-11 00:00:00",
+			"IsCredentialFiled": true,
+			"Composition": "Composition"
+		}
+		,
+		{
+			"Type": 0,
+			"ExpectedMoney": "1,000,000.00",
+			"ExpectedCurrency": 0,
+			"PayCondition": "Condition",
+			"PayDate": "2010-01-01",
+			"PayCredential": "Credential",
+			"ActualMoney": "1,000,000.00",
+			"ActualCurrency": 0,
+			"PayType": 0,
+			"CreatedTime": "2010-01-01 00:00:00",
+			"IsCredentialFiled": true,
+			"Composition": "Composition"
+		}
+	],
+	"ReceiveTimes": [
+		{
+			"Type": 2,
+			"ExpectedMoney": "1,000,000.00",
+			"ExpectedCurrency": 0,
+			"ReceiveCondition": "Condition",
+			"ReceiveDate": "2010-01-01",
+			"ActualMoney": "1,000,000.00",
+			"ActualCurrency": 0,
+			"InvoiceState": 0,
+			"InvoiceTime": "2010-01-01 00:00:00"
+		}
+	],
+	"PreRegisterRecording": {
+		"ContractManagerComments": "Comments",
+		"ProjectManagerComments": "Comments"
+	},
+	"FormalRegisterRecording": {
+		"ContractManagerComments": "Comments",
+		"ProjectManagerComments": "Comments"
+	},
+	"PayRecordings": [
+		{
+			"ContractManagerComments": "Comments",
+			"ProjectManagerComments": "Comments"
+		},
+		{
+			"ContractManagerComments": "Comments",
+			"ProjectManagerComments": "Comments"
+		}
+	],
+	"ReceiveRecordings": [
+		{
+			"ContractManagerComments": "Comments",
+			"ProjectManagerComments": "Comments"
+		},
+		{
+			"ContractManagerComments": "Comments",
+			"ProjectManagerComments": "Comments"
+		}
+	]
+}

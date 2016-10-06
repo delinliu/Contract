@@ -1,0 +1,33 @@
+.operator-wrapper {
+	background: #337ab7;
+	color: white;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: all 0.5s;
+	padding-left: 7px;
+	padding-right: 7px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin-right: 5px;
+	margin-bottom: 4px;
+	margin-top: 4px;
+}
+
+.operator-wrapper:hover {
+	cursor: pointer
+} 
+
+.operator-disabled {
+	background: gray;
+	color: white;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: all 0.5s;
+	padding-left: 7px;
+	padding-right: 7px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin-right: 5px;
+	margin-bottom: 4px;
+	margin-top: 4px;
+}
