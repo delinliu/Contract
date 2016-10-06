@@ -346,7 +346,7 @@ function receiveNodeHtml() {
 			+ '	<tr>'
 			+ '		<td class="table-key-width">收款条件</td>'
 			+ '		<td class="table-value-width" contentEditable=true data-receive-condition></td>'
-			+ '		<td class="table-key-width">计划付款日期</td>'
+			+ '		<td class="table-key-width">计划收款日期</td>'
 			+ '		<td class="table-value-width"><input class="date-picker"'
 			+ '			type="text" data-receive-date></td>'
 			+ '	</tr>'

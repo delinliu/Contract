@@ -23,6 +23,11 @@ public class ContractController {
 	public String index() {
 		return "/WEB-INF/pages/index.jsp";
 	}
+	
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	public String search() {
+		return "/WEB-INF/pages/search.jsp";
+	}
 
 	@RequestMapping(value = "/pre-register", method = RequestMethod.GET)
 	public String preRegister() {
