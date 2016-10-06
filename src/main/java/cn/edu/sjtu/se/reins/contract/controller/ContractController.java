@@ -54,11 +54,6 @@ public class ContractController {
 		return "/WEB-INF/pages/logout.jsp";
 	}
 
-	@RequestMapping(value = "/list-contracts", method = RequestMethod.GET)
-	public String listContractsPage() {
-		return "/WEB-INF/pages/list-contracts.jsp";
-	}
-
 	@RequestMapping(value = "/view-contract/{ContractID}", method = RequestMethod.GET)
 	public String viewContractPage() {
 		return "/WEB-INF/pages/view-contract.jsp";

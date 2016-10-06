@@ -15,7 +15,6 @@ function getContractFromServer(ContractID, callback) {
 
 function showContract(data) {
 	var contract = data.value;
-	console.log(contract)
 	$('#title').text('合同表' + (contract['Number']?contract['Number']:''));
 	fillContract(contract);
 }

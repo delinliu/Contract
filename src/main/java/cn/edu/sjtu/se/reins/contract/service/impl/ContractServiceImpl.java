@@ -316,9 +316,7 @@ public class ContractServiceImpl implements ContractService {
 			list.addAll(contractMapper.getContractByState(0)); // 预登记审批
 			list.addAll(contractMapper.getContractByState(3)); // 正式登记审批
 			List<Map<String, Object>> t = contractMapper.getPayNodesByState(2);
-			System.out.println(t);
 			t = contractMapper.getReceiveNodesByState(2);
-			System.out.println(t);
 			list.addAll(contractMapper.getPayNodesByState(2)); // 付款节点
 			list.addAll(contractMapper.getReceiveNodesByState(2)); // 收款节点
 		}
@@ -355,7 +353,6 @@ public class ContractServiceImpl implements ContractService {
 
 	@Override
 	public Map<String, Object> search(Map<String, Object> map) throws Exception {
-		System.out.println(map);
 
 		Map<String, Object> parameter = new HashMap<>();
 		String textFields[] = new String[] { "Number", "Name", "Operator", "ProjectNumber", "BudgetNumber",
@@ -428,12 +425,8 @@ public class ContractServiceImpl implements ContractService {
 		}
 		parameter.put("SortOrder", sortOrder);
 
-		System.out.println(parameter);
-
 		int total = contractMapper.countSearch(parameter);
 		List<Map<String, Object>> contracts = contractMapper.search(parameter);
-		System.out.println(total);
-		System.out.println(contracts);
 
 		Map<String, Object> pageInfo = new HashMap<>();
 		pageInfo.put("CurrPage", currPage);

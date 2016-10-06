@@ -24,8 +24,6 @@ public class MyLoginManager implements UserDetailsService {
 
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-		System.out.println("User: " + username + " try to login");
-
 		Map<String, Object> user = accountMapper.getAccount(username);
 		if (user == null) {
 			throw new UsernameNotFoundException("User not found or password is wrong.");

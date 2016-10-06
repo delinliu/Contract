@@ -21,9 +21,6 @@
 		href="<%=request.getContextPath()%>/list-verify">审核</a></li>
 	</security:authorize>
 	<li role="presentation"
-		<%="list-contracts".equals(request.getParameter("pageTitle")) ? "class=\"active\"" : ""%>><a
-		href="<%=request.getContextPath()%>/list-contracts">查看合同登记表</a></li>
-	<li role="presentation"
 		<%="search".equals(request.getParameter("pageTitle")) ? "class=\"active\"" : ""%>><a
 		href="<%=request.getContextPath()%>/search">搜索</a></li>
 		

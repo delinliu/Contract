@@ -80,7 +80,6 @@ function initCommentListener() {
 
 function submitComment() {
 	var comment = $('#' + tdID).text();
-	console.log(comment)
 	if(!comment || comment === defaultText){
 		alert('请填写审核意见再提交。')
 		return;

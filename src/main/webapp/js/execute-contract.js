@@ -95,7 +95,6 @@ function submitReceiveNode(parameters){
 }
 
 function submitNode(parameters, url){
-	console.log(parameters)
 	$.ajax({
 		url : url,
 		type : 'post',

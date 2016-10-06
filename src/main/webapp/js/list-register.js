@@ -46,6 +46,5 @@ function registerContract(e, value, row, index){
 }
 
 function viewContract(e, value, row, index) { 
-	console.log(row);
 	location.href = '/contract/view-contract/' + row['ContractID'];
 }

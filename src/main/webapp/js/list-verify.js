@@ -39,7 +39,6 @@ function showContracts(data) {
 
 function contractProcess(value, row, index) {
 	var element = '<div class="operator-wrapper contract-view">查看</div>';
-	console.log(row)
 	if(row.ContractState === 5){
 		if(row.PayNodeID){
 			if(row.State === 2){
@@ -84,6 +83,5 @@ function commentContract(e, value, row, index){
 }
 
 function viewContract(e, value, row, index) { 
-	console.log(row);
 	location.href = '/contract/view-contract/' + row['ContractID'];
 }

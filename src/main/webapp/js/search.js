@@ -15,7 +15,6 @@ function search(parameter, callback) {
 		dataType : 'json',
 		success : function(data) {
 			if (data.success) {
-				console.log(data.value);
 				if (callback) {
 					callback(data.value);
 				}
@@ -37,7 +36,6 @@ function showContractPage(pageInfo) {
 }
 
 function gotoPage() {
-	console.log(this);
 	var targetPage = parseInt($(this).attr('data-page-btn'));
 	var parameter = getSearchParameter();
 	parameter['PerPage'] = PerPage;
@@ -171,6 +169,5 @@ function getSearchParameter() {
 
 	parameter['SortType'] = $('input[name=sort-type]:checked').val();
 	parameter['SortOrder'] = $('input[name=sort-order]:checked').val();
-	console.log(parameter)
 	return parameter;
 }
