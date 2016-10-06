@@ -1,7 +1,9 @@
 var contract = null;
 function initExecuteContract(data){
 	disableEdit();
-	$('[data-receive-invoice-time]').text('系统自动生成')
+//	$('[data-receive-invoice-time]').text('系统自动生成')
+//	$('[data-pay-created-time]').text('系统自动生成')
+	
 	contract = data.value;
 	var background = '#FAEBD7';
 	for(var i=0; i<contract.PayTimes.length; i++){

@@ -40,25 +40,41 @@ function showContracts(data) {
 function contractProcess(value, row, index) {
 	var element = '<div class="operator-wrapper contract-view">查看</div>';
 	console.log(row)
-	switch(row.State){
-	case 0:
-		element += '<div class="operator-wrapper contract-comment">预登记审核（合同管理员）</div>';
-		break;
-	case 1:
-		element += '<div class="operator-wrapper contract-comment">预登记审核（项目分管领导）</div>';
-		break;
-	case 2:
-		break;
-	case 3:
-		element += '<div class="operator-wrapper contract-comment">正式登记审核（合同管理员）</div>';
-		break;
-	case 4:
-		element += '<div class="operator-wrapper contract-comment">正式登记审核（项目分管领导）</div>';
-		break;
-	case 5:
-		break;
-	case 6:
-		break;
+	if(row.ContractState === 5){
+		if(row.PayNodeID){
+			if(row.State === 2){
+				element += '<div class="operator-wrapper contract-comment">付款节点审核（合同管理员）</div>';
+			}else if(row.State === 3){
+				element += '<div class="operator-wrapper contract-comment">付款节点审核（项目分管领导）</div>';
+			}
+		}else if(row.ReceiveNodeID){
+			if(row.State === 2){
+				element += '<div class="operator-wrapper contract-comment">收款节点审核（合同管理员）</div>';
+			}else if(row.State === 3){
+				element += '<div class="operator-wrapper contract-comment">收款节点审核（项目分管领导）</div>';
+			}
+		}
+	}else{
+		switch(row.State){
+		case 0:
+			element += '<div class="operator-wrapper contract-comment">预登记审核（合同管理员）</div>';
+			break;
+		case 1:
+			element += '<div class="operator-wrapper contract-comment">预登记审核（项目分管领导）</div>';
+			break;
+		case 2:
+			break;
+		case 3:
+			element += '<div class="operator-wrapper contract-comment">正式登记审核（合同管理员）</div>';
+			break;
+		case 4:
+			element += '<div class="operator-wrapper contract-comment">正式登记审核（项目分管领导）</div>';
+			break;
+		case 5:
+			break;
+		case 6:
+			break;
+		}
 	}
 	return element;
 }

@@ -1,6 +1,7 @@
 var contract = null;
 var tdID = null;
 var defaultText = '请填写审核意见';
+var color = '#FAEBD7';
 function initCommentTable(data) {
 	contract = data.value;
 	var pageTitle = '';
@@ -25,7 +26,8 @@ function initCommentTable(data) {
 		tdID = 'FormalRegisterProjectManagerComments';
 		pageTitle = '项目分管领导正式审批';
 		break;
-	case 5:
+	case 5: // 合同正在执行中，进行付款节点或者收款节点审核
+		initNodeComment();
 		break;
 	case 6:
 		break;
@@ -34,7 +36,7 @@ function initCommentTable(data) {
 	disableEdit();
 	$('#' + tdID).attr('contenteditable', true);
 	$('#' + tdID).text(defaultText);
-	$('#' + tdID).css('background', '#FAEBD7')
+	$('#' + tdID).css('background', color)
 	$('#' + tdID).off('click').on('click', function(){
 		if($('#' + tdID).text() === defaultText){
 			$('#' + tdID).text('');
@@ -42,6 +44,29 @@ function initCommentTable(data) {
 	});
 	$('#title').text(pageTitle);
 } 
+
+function initNodeComment(){
+	var payNodes = contract.PayTimes;
+	for(var i=0; i<payNodes.length; i++){
+		var node = payNodes[i];
+		var tableID = '[data-pay-node=' + node.PayNodeID + ']';
+		if(node.State === 2 || node.State === 3){
+			tdID = 'pay-node-comment';
+			$(tableID).append('<tr><td>付款节点审批</td><td>' + (node.State===2?'合同管理员':'项目分管领导') + '审核意见</td><td colspan=3 id="' + tdID + '"></td></tr>')
+			$($(tableID).find('td')[0]).css('background', color);
+		}
+	}
+	var receiveNodes = contract.ReceiveTimes;
+	for(var i=0; i<receiveNodes.length; i++){ 
+		var node = receiveNodes[i];
+		var tableID = '[data-receive-node=' + node.ReceiveNodeID + ']';
+		if(node.State === 2 || node.State === 3){
+			tdID = 'receive-node-comment';
+			$(tableID).append('<tr><td>收款节点审批</td><td>' + (node.State===2?'合同管理员':'项目分管领导') + '审核意见</td><td colspan=3 id="' + tdID + '"></td></tr>')
+			$($(tableID).find('td')[0]).css('background', color);
+		}
+	}
+}
 
 function hideNumber(){
 	$('#number').parent().children()[0].remove();
@@ -58,6 +83,7 @@ function submitComment() {
 	console.log(comment)
 	if(!comment || comment === defaultText){
 		alert('请填写审核意见再提交。')
+		return;
 	}
 	$('#comment-button').off('click');
 	$.ajax({

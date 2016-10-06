@@ -64,8 +64,18 @@ function fillPayTimes(list){
 		$(node).find('[data-actual-currency][value=' + pay['ActualCurrency'] + ']').attr('checked', true);
 		$(node).find('[data-expected-currency][value=' + pay['ExpectedCurrency'] + ']').attr('checked', true);
 		$(node).find('[data-is-credential-filed][value=' + pay['IsCredentialFiled'] + ']').attr('checked', true);
-		$(node).find('[data-pay-created-time]').text(pay['CreatedTime']);
+		if(pay['State'] < 2){
+			$(node).find('[data-pay-created-time]').text('系统自动生成');
+		}else{
+			$(node).find('[data-pay-created-time]').text(pay['CreatedTime']);
+		}
 		$(node).attr('data-pay-node', pay['PayNodeID']);
+		if(pay['ContractManagerComments']){
+			$(node).append('<tr><td>付款节点审批</td><td>合同管理员审核意见</td><td colspan=3>' + pay['ContractManagerComments'] + '</td></tr>');
+		}
+		if(pay['ProjectManagerComments']){
+			$(node).append('<tr><td>付款节点审批</td><td>项目分管领导审核意见</td><td colspan=3>' + pay['ProjectManagerComments'] + '</td></tr>');
+		}
 	} 
 }
 
@@ -78,14 +88,24 @@ function fillReceiveTimes(list){
 		var node = nodes[nodes.length-1];
 		$(node).find('[data-expected-money]').text(receive['ExpectedMoney']); 
 		$(node).find('[data-actual-money]').text(receive['ActualMoney']);
-		$(node).find('[data-receive-condition]').text(receive['ReceiveCondition']);
+		$(node).find('[data-receive-condition]').text(receive['ReceiveCondition']); 
 		$(node).find('[data-receive-date]').val(receive['ReceiveDate']);
 		$(node).find('[data-type][value=' + receive['Type'] + ']').attr('checked', true);  
 		$(node).find('[data-actual-currency][value=' + receive['ActualCurrency'] + ']').attr('checked', true);
 		$(node).find('[data-expected-currency][value=' + receive['ExpectedCurrency'] + ']').attr('checked', true);
 		$(node).find('[data-invoice-state][value=' + receive['InvoiceState'] + ']').attr('checked', true);
-		$(node).find('[data-receive-invoice-time]').text(receive['InvoiceTime']);
+		if(receive['State'] < 2){
+			$(node).find('[data-receive-invoice-time]').text('系统自动生成');
+		}else{
+			$(node).find('[data-receive-invoice-time]').text(receive['InvoiceTime']);
+		}
 		$(node).attr('data-receive-node', receive['ReceiveNodeID']); 
+		if(receive['ContractManagerComments']){
+			$(node).append('<tr><td>收款节点审批</td><td>合同管理员审核意见</td><td colspan=3>' + receive['ContractManagerComments'] + '</td></tr>');
+		}
+		if(receive['ProjectManagerComments']){
+			$(node).append('<tr><td>收款节点审批</td><td>项目分管领导审核意见</td><td colspan=3>' + receive['ProjectManagerComments'] + '</td></tr>');
+		}
 	}
 }
 
@@ -288,7 +308,7 @@ function payNodeHtml() {
 var receiveNodeAmount = 0;
 function receiveNodeHtml() {
 	var html = '<table data-receive-node class="table-bordered">' + '	<tr>'
-			+ '		<td rowspan=6 class="table-key-width">收款节点'
+			+ '		<td rowspan=5 class="table-key-width">收款节点'
 			+ (++receiveNodeAmount)
 			+ '<br><a data-remove-receive-node>删除节点</a></td>'
 			+ '		<td class="table-key-width">节点类型</td>'

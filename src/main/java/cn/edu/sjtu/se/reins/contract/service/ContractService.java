@@ -55,7 +55,7 @@ public interface ContractService {
 	Map<String, Object> getContract(int contractID);
 	
 	/**
-	 * 管理员（合同管理员和项目分管领导）审核一个合同（包括预审批、正式审批）
+	 * 管理员（合同管理员和项目分管领导）审核一个合同（包括预审批、正式审批、付款收款审批）
 	 * @param map
 	 * @throws Exception
 	 */

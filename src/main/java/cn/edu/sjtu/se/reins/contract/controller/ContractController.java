@@ -1,12 +1,9 @@
 package cn.edu.sjtu.se.reins.contract.controller;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -171,15 +168,6 @@ public class ContractController {
 			e.printStackTrace();
 			return Util.createErrorMap("获取合同表失败，请稍后再试或联系管理员。");
 		}
-	}
-
-	@RequestMapping(value = "/getdict/{tableName}", method = RequestMethod.GET)
-	@ResponseBody
-	public Map<String, Object> getDict(@PathVariable("tableName") String tableName) {
-		List<?> value = contractServicecImpl.getDict(tableName);
-		Map<String, Object> map = new HashMap<>();
-		map.put("value", value);
-		return map;
 	}
 
 	@RequestMapping(value = "/get-contract", method = RequestMethod.GET)

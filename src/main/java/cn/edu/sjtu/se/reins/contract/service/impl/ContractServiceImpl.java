@@ -233,23 +233,74 @@ public class ContractServiceImpl implements ContractService {
 			contractMapper.updateFormalRegisterProjectManagerComments(param);
 			
 			// 正式审批完成了，接下来合同就进入执行阶段了，这里预先把下一个需要执行的节点（付款节点或者收款节点）的状态更新，等待经办人执行
+			updateNextNodeFrom0to1(contract);
+			break;
+		case 5: // 收款、付款节点审批
 			switch((int)contract.get("FinancialFlow")){
 			case 0: // 入账合同
-				Map<String, Object> receivenode = contractMapper.getFirstReceiveNode(0, contractID);
+				Map<String, Object> receivenode = contractMapper.getFirstReceiveNode(2, contractID); // 合同管理员审核
 				if(receivenode != null){
-					contractMapper.updateReceiveNodeState(1, (int)receivenode.get("ReceiveNodeID"));
+					param.put("ReceiveNodeID", receivenode.get("ReceiveNodeID"));
+					contractMapper.updateReceiveNodeContractManagerComments(param);
+					contractMapper.updateReceiveNodeState(3, (int)receivenode.get("ReceiveNodeID"));
+					break;
+				}
+				receivenode = contractMapper.getFirstReceiveNode(3, contractID); // 合同管理员审核
+				if(receivenode != null){
+					param.put("ReceiveNodeID", receivenode.get("ReceiveNodeID"));
+					contractMapper.updateReceiveNodeProjectManagerComments(param);
+					contractMapper.updateReceiveNodeState(4, (int)receivenode.get("ReceiveNodeID"));
+					
+					// 当前节点执行完成，把启动下一个节点
+					updateNextNodeFrom0to1(contract);
+					break;
 				}
 				break;
 			case 1: // 出账合同
-				Map<String, Object> paynode = contractMapper.getFirstPayNode(0, contractID);
+				Map<String, Object> paynode = contractMapper.getFirstPayNode(2, contractID); // 合同管理员审核
 				if(paynode != null){
-					contractMapper.updatePayNodeState(1, (int)paynode.get("PayNodeID"));
+					param.put("PayNodeID", paynode.get("PayNodeID"));
+					contractMapper.updatePayNodeContractManagerComments(param);
+					contractMapper.updatePayNodeState(3, (int)paynode.get("PayNodeID"));
+					break;
+				}
+				paynode = contractMapper.getFirstPayNode(3, contractID); // 合同管理员审核
+				if(paynode != null){
+					param.put("PayNodeID", paynode.get("PayNodeID"));
+					contractMapper.updatePayNodeProjectManagerComments(param);
+					contractMapper.updatePayNodeState(4, (int)paynode.get("PayNodeID"));
+
+					// 当前节点执行完成，把启动下一个节点
+					updateNextNodeFrom0to1(contract);
+					break;
 				}
 				break;
 			}
 			break;
 		default:
 			throw new Exception("审批失败，请稍后再试");
+		}
+	}
+	
+	/**
+	 * 把合同的第一个未执行的节点（付款或收款）的状态从0变到1
+	 * @param contract
+	 */
+	private void updateNextNodeFrom0to1(Map<String, Object> contract){
+		int contractID = Integer.parseInt(String.valueOf(contract.get("ContractID")));
+		switch((int)contract.get("FinancialFlow")){
+		case 0: // 入账合同
+			Map<String, Object> receivenode = contractMapper.getFirstReceiveNode(0, contractID);
+			if(receivenode != null){
+				contractMapper.updateReceiveNodeState(1, (int)receivenode.get("ReceiveNodeID"));
+			}
+			break;
+		case 1: // 出账合同
+			Map<String, Object> paynode = contractMapper.getFirstPayNode(0, contractID);
+			if(paynode != null){
+				contractMapper.updatePayNodeState(1, (int)paynode.get("PayNodeID"));
+			}
+			break;
 		}
 	}
 
@@ -263,14 +314,22 @@ public class ContractServiceImpl implements ContractService {
 		if(authorities.contains("ROLE_CONTRACT_MANAGER")){
 			list.addAll(contractMapper.getContractByState(0)); // 预登记审批
 			list.addAll(contractMapper.getContractByState(3)); // 正式登记审批
+			List<Map<String, Object>> t = contractMapper.getPayNodesByState(2);
+			System.out.println(t);
+			t = contractMapper.getReceiveNodesByState(2);
+			System.out.println(t);
+			list.addAll(contractMapper.getPayNodesByState(2)); // 付款节点
+			list.addAll(contractMapper.getReceiveNodesByState(2)); // 收款节点 
 		}
 		
 		// 获取项目分管领导所有能审核的合同
 		if(authorities.contains("ROLE_PROJECT_MANAGER")){
 			list.addAll(contractMapper.getContractByState(1)); // 预登记审批
 			list.addAll(contractMapper.getContractByState(4)); // 正式登记审批
+			list.addAll(contractMapper.getPayNodesByState(3)); // 付款节点
+			list.addAll(contractMapper.getReceiveNodesByState(3)); // 收款节点 
 		}
-		return list;
+		return list; 
 	}
 
 	@Override
@@ -281,6 +340,7 @@ public class ContractServiceImpl implements ContractService {
 		List<Map<String, Object>> list = contractMapper.getContractByStateAndOperator(2, username);
 		return list;
 	}
+	
 	@Override
 	public List<Map<String, Object>> getExecuteContracts() throws Exception {
 		String username = Util.loginUsername();

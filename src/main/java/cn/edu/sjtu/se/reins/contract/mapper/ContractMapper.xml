@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.edu.sjtu.se.reins.contract.mapper.ContractMapper">
-
-	<select id="getDict" resultType="map">
-		select * from ${tableName};
-	</select>
 	
 	<insert id="createContract"  useGeneratedKeys="true" keyProperty="ContractID">
 		insert into contract(CreatedUsername, Number, Name, FinancialFlow, IsForeignContract,
@@ -179,6 +175,47 @@
 			ActualCurrency=#{ActualCurrency},
 			InvoiceState=#{InvoiceState},
 			InvoiceTime=now()
+		where ReceiveNodeID=#{ReceiveNodeID};
+	</update>
+	
+	<select id="getPayNodesByState" resultType="map">
+		select contract.ContractID, contract.Number, contract.Name, contract.Operator, contract.State as ContractState,
+			paynode.*
+		from paynode
+		left join contract on contract.ContractID = paynode.ContractID
+		where paynode.State=#{State}
+	</select>
+	
+	<select id="getReceiveNodesByState" resultType="map">
+		select contract.ContractID, contract.Number, contract.Name, contract.Operator, contract.State as ContractState,
+			receivenode.*
+		from receivenode
+		left join contract on contract.ContractID = receivenode.ContractID
+		where receivenode.State=#{State}
+	</select>
+	
+	<update id="updatePayNodeContractManagerComments">
+		update paynode
+		set ContractManagerComments=#{Comments},
+			ContractManager=#{Username}
+		where PayNodeID=#{PayNodeID};
+	</update>
+	<update id="updatePayNodeProjectManagerComments">
+		update paynode
+		set ProjectManagerComments=#{Comments},
+			ProjectManager=#{Username}
+		where PayNodeID=#{PayNodeID};
+	</update>
+	<update id="updateReceiveNodeContractManagerComments">
+		update receivenode
+		set ContractManagerComments=#{Comments},
+			ContractManager=#{Username}
+		where ReceiveNodeID=#{ReceiveNodeID};
+	</update>
+	<update id="updateReceiveNodeProjectManagerComments">
+		update receivenode
+		set ProjectManagerComments=#{Comments},
+			ProjectManager=#{Username}
 		where ReceiveNodeID=#{ReceiveNodeID};
 	</update>
 </mapper>
