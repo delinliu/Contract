@@ -74,4 +74,13 @@ public interface ContractService {
 	 * @throws Exception
 	 */
 	void executeReceive(Map<String, Object> map) throws Exception;
+	
+	/**
+	 * 查询合同，分页、筛选、排序
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	Map<String, Object> search(Map<String, Object> map) throws Exception;
+	
 }

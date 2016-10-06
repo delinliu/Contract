@@ -27,8 +27,7 @@
 <script src="<%=request.getContextPath()%>/js/util.js"></script>
 <script src="<%=request.getContextPath()%>/js/contract.js"
 	charset="UTF-8"></script>
-<script src="<%=request.getContextPath()%>/js/search.js"
-	charset="UTF-8"></script>
+<script src="<%=request.getContextPath()%>/js/search.js" charset="UTF-8"></script>
 </head>
 <body>
 	<div class="container text-center">
@@ -119,10 +118,10 @@
 										data-pay-date type="text"></td>
 									<td class="table-key-width">支付类型</td>
 									<td class="table-value-width"><input type="radio"
-										name="fund-direction" value=-100>全部<br>
-									<input type="radio" name="fund-direction" value=0>挂账<br>
-										<input type="radio" name="fund-direction" value=1>预付<br>
-										<input type="radio" name="fund-direction" value=2>决算款
+										name="pay-type" data-pay-type value=-100>全部<br> <input
+										type="radio" name="pay-type" data-pay-type value=0>挂账<br>
+										<input type="radio" name="pay-type" data-pay-type value=1>预付<br>
+										<input type="radio" name="pay-type" data-pay-type value=2>决算款
 									</td>
 								</tr>
 								<tr>
@@ -136,23 +135,25 @@
 					</tr>
 					<tr id="">
 						<td class="table-key-width">排序</td>
-						<td class="table-value-width"> <input
-							type="radio" name="sort-type" value=0 checked=checked>履行期限（始）<br> <input
-							type="radio" name="sort-type" value=1>履行期限（终）<br> <input
-							type="radio" name="sort-type" value=2>计划付款日期<br> <input
-							type="radio" name="sort-type" value=3>计划收款日期</td>
+						<td class="table-value-width"><input type="radio"
+							name="sort-type" value=0 checked=checked>履行期限（始）<br>
+							<input type="radio" name="sort-type" value=1>履行期限（终）<br>
+							<!-- <input type="radio" name="sort-type" value=2>计划付款日期<br>  -->
+							<!-- <input type="radio" name="sort-type" value=3>计划收款日期 -->
+						</td>
 						<td class="table-key-width">排序</td>
-						<td class="table-value-width"> <input
-							type="radio" name="sort-order" value=0 checked=checked>升序<br> <input
+						<td class="table-value-width"><input type="radio"
+							name="sort-order" value=0 checked=checked>升序<br> <input
 							type="radio" name="sort-order" value=1>降序</td>
 					</tr>
 					<tr>
-					<td colspan=4>
-					<button class="btn btn-primary" style="width:200px">搜 索</button></td>
+						<td colspan=4>
+							<button id="search-btn" class="btn btn-primary"
+								style="width: 200px">搜 索</button>
+						</td>
 					</tr>
 				</table>
-				<div style="padding-top:20px">
-				</div>
+				<div style="padding-top: 20px"></div>
 				<table id="contract-table">
 
 				</table>

@@ -122,4 +122,10 @@ public interface ContractMapper {
 	void updateReceiveNodeContractManagerComments(Map<String, Object> map);
 	void updateReceiveNodeProjectManagerComments(Map<String, Object> map);
 	
+	/**
+	 * 搜索合同（包括筛选、分页、排序）
+	 * @param map
+	 * @return
+	 */
+	List<Map<String, Object>> search(Map<String, Object> map);
 }

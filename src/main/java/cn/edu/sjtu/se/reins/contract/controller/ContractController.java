@@ -130,6 +130,17 @@ public class ContractController {
 			return Util.createErrorMap("操作失败，请稍后再试或联系管理员。");
 		}
 	}
+	
+	@RequestMapping(value = "/search", method = RequestMethod.POST, consumes = "application/json")
+	@ResponseBody
+	public Map<String, Object> search(@RequestBody Map<String, Object> parameters) {
+		try {
+			return Util.createMap(contractServicecImpl.search(parameters));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Util.createErrorMap("操作失败，请稍后再试或联系管理员。");
+		}
+	}
 
 	@RequestMapping(value = "/get-contracts", method = RequestMethod.GET)
 	@ResponseBody
