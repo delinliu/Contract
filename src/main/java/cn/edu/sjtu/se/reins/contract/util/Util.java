@@ -30,10 +30,19 @@ public class Util {
 		return map;
 	}
 
+	/**
+	 * 字符串转换成Date
+	 * @param s
+	 * @return
+	 * @throws ParseException
+	 */
 	public static Date string2date(String s) throws ParseException {
 		return DateFormat.getDateInstance().parse(s);
 	}
 
+	/**
+	 * Date转换成字符串：yyyy-MM-dd
+	 */
 	@SuppressWarnings("deprecation")
 	public static String date2string(Date date) {
 		int year = date.getYear() + 1900;
@@ -42,6 +51,11 @@ public class Util {
 		return year + "-" + (month < 10 ? "0" + month : month) + "-" + (day < 10 ? "0" + day : day);
 	}
 
+	/**
+	 * 获取当前登录管理员的用户名
+	 * @return
+	 * @throws Exception
+	 */
 	public static String loginUsername() throws Exception {
 		try {
 			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
@@ -52,6 +66,11 @@ public class Util {
 		}
 	}
 
+	/**
+	 * 获取当前登录管理员的所有权限（合同管理员、项目分管领导）
+	 * @return
+	 * @throws Exception
+	 */
 	public static Set<String> loginAuthorities() throws Exception {
 		
 		Set<String> set = new HashSet<>();

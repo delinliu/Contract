@@ -21,23 +21,12 @@ public class ContractServiceImpl implements ContractService {
 	@Autowired
 	private ContractMapper contractMapper;
 
-	public List<Map<String, Object>> getDict(String tableName) {
-		if (tableName.contains(" ")) {
-			return null;
-		}
-		try {
-			return contractMapper.getDict(tableName);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void executePay(Map<String, Object> map) throws Exception {
 		int payNodeID = (int) map.get("PayNodeID");
+		
+		// 更新付款节点
 		Map<String, Object> node = new HashMap<>();
 		node.put("PayNodeID", payNodeID);
 		node.put("ActualMoney", String.valueOf(map.get("ActualMoney")));
@@ -46,6 +35,8 @@ public class ContractServiceImpl implements ContractService {
 		node.put("IsCredentialFiled", Boolean.parseBoolean(String.valueOf(map.get("IsCredentialFiled"))));
 		node.put("Composition", String.valueOf(map.get("Composition")));
 		contractMapper.updatePayNode(node);
+		
+		// 更新付款节点状态
 		contractMapper.updatePayNodeState(2, payNodeID);
 	}
 	
@@ -53,12 +44,16 @@ public class ContractServiceImpl implements ContractService {
 	@Transactional(rollbackFor = Exception.class)
 	public void executeReceive(Map<String, Object> map) throws Exception {
 		int receiveNodeID = (int) map.get("ReceiveNodeID");
+		
+		// 更新收款节点
 		Map<String, Object> node = new HashMap<>();
 		node.put("ReceiveNodeID", receiveNodeID);
 		node.put("ActualMoney", String.valueOf(map.get("ActualMoney")));
 		node.put("ActualCurrency", Integer.parseInt(String.valueOf(map.get("ActualCurrency"))));
 		node.put("InvoiceState", Integer.parseInt(String.valueOf(map.get("InvoiceState"))));
 		contractMapper.updateReceiveNode(node);
+		
+		// 更新收款节点状态
 		contractMapper.updateReceiveNodeState(2, receiveNodeID);
 	}
 	
@@ -67,11 +62,15 @@ public class ContractServiceImpl implements ContractService {
 	@Transactional(rollbackFor = Exception.class)
 	public void registerContract(Map<String, Object> map) throws Exception {
 		int contractID = (int) map.get("ContractID");
+		
+		// 更新合同以及其状态
 		Map<String, Object> param = new HashMap<>();
 		fillContractBasicInfo(param, map);
 		param.put("State", 3);
 		param.put("ContractID", contractID);
 		contractMapper.updateContract(param);
+		
+		// 创建付款节点
 		List<Map<String, Object>> payNodes = (List<Map<String, Object>>) map.get("PayTimes");
 		if (payNodes != null) {
 			for (Map<String, Object> payNode : payNodes) {
@@ -86,6 +85,8 @@ public class ContractServiceImpl implements ContractService {
 				contractMapper.createPayNode(node);
 			}
 		}
+		
+		// 创建收款节点
 		List<Map<String, Object>> receiveNodes = (List<Map<String, Object>>) map.get("ReceiveTimes");
 		if (receiveNodes != null) {
 			for (Map<String, Object> receiveNode : receiveNodes) {
@@ -135,6 +136,11 @@ public class ContractServiceImpl implements ContractService {
 
 	@SuppressWarnings("unchecked")
 	private String list2string(Map<String, Object> map, String key, String subKey) {
+		
+		// 合同表中的一些checkbox多选框在数据库中以字符串的形式保存，如[0, 1, 3]保存为：#0#1#3#
+		// 0、1、3这些数字是何意义完全是由前端来解析的
+		
+		// 把一个多选框List转换成字符串
 		String str = "#";
 		List<Map<String, Object>> list = (List<Map<String, Object>>) map.get(key);
 		for (int i = 0; i < list.size(); i++) {
@@ -145,6 +151,8 @@ public class ContractServiceImpl implements ContractService {
 	}
 
 	private List<Map<String, Object>> string2list(Map<String, Object> map, String key, String subKey) {
+		
+		// 把字符串转换成多选框List
 		String str = (String) map.get(key);
 		List<Map<String, Object>> list = new ArrayList<>();
 		String ss[] = str.split("#");
@@ -166,18 +174,24 @@ public class ContractServiceImpl implements ContractService {
 
 	@Override
 	public Map<String, Object> getContract(int contractID) {
+		
+		// 获取合同基本信息
 		Map<String, Object> contract = contractMapper.getContract(contractID);
 		contract.put("SubjectObjects", string2list(contract, "SubjectObjects", "SubjectObjectNumber"));
 		contract.put("Departments", string2list(contract, "Departments", "DepartmentNumber"));
 		contract.put("ArchiveMaterials", string2list(contract, "ArchiveMaterials", "ArchiveMaterialNumber"));
 		contract.put("StartDate", Util.date2string((Date) contract.get("StartDate")));
 		contract.put("EndDate", Util.date2string((Date) contract.get("EndDate")));
+		
+		// 获取付款节点
 		List<Map<String, Object>> payNodes = contractMapper.getPayNodes(contractID);
 		for (Map<String, Object> node : payNodes) {
 			node.put("PayDate", Util.date2string((Date) node.get("PayDate")));
 			node.put("CreatedTime", Util.date2string((Date) node.get("CreatedTime")));
 		}
 		contract.put("PayTimes", payNodes);
+		
+		// 获取收款节点
 		List<Map<String, Object>> receiveNodes = contractMapper.getReceiveNodes(contractID);
 		for (Map<String, Object> node : receiveNodes) {
 			node.put("ReceiveDate", Util.date2string((Date) node.get("ReceiveDate")));
@@ -191,12 +205,16 @@ public class ContractServiceImpl implements ContractService {
 	@Transactional(rollbackFor = Exception.class)
 	public void commentContract(Map<String, Object> map) throws Exception {
 		int contractID = Integer.parseInt(String.valueOf(map.get("ContractID")));
+		
+		// 填充审批信息（审批者、审批意见）
 		Map<String, Object> contract = contractMapper.getContract(contractID);
 		String username = Util.loginUsername();
 		Map<String, Object> param = new HashMap<>();
 		param.put("Username", username);
 		param.put("Comments", String.valueOf(map.get("Comment")));
 		param.put("ContractID", contractID);
+		
+		// 根据合同当前状态来判断是哪种审批，同时更新到下一个状态
 		switch ((int)contract.get("State")) {
 		case 0: // 预登记审批：合同管理员审核意见
 			param.put("State", 1);
@@ -213,6 +231,8 @@ public class ContractServiceImpl implements ContractService {
 		case 4: // 正式登记审批：项目分管领导审核意见
 			param.put("State", 5);
 			contractMapper.updateFormalRegisterProjectManagerComments(param);
+			
+			// 正式审批完成了，接下来合同就进入执行阶段了，这里预先把下一个需要执行的节点（付款节点或者收款节点）的状态更新，等待经办人执行
 			switch((int)contract.get("FinancialFlow")){
 			case 0: // 入账合同
 				Map<String, Object> receivenode = contractMapper.getFirstReceiveNode(0, contractID);
@@ -235,15 +255,20 @@ public class ContractServiceImpl implements ContractService {
 
 	@Override
 	public List<Map<String, Object>> getVerifyContracts() throws Exception {
+		
 		Set<String> authorities = Util.loginAuthorities();
 		List<Map<String, Object>> list = new ArrayList<>();
+		
+		// 获取合同管理员所有能审核的合同
 		if(authorities.contains("ROLE_CONTRACT_MANAGER")){
-			list.addAll(contractMapper.getContractByState(0));
-			list.addAll(contractMapper.getContractByState(3));
+			list.addAll(contractMapper.getContractByState(0)); // 预登记审批
+			list.addAll(contractMapper.getContractByState(3)); // 正式登记审批
 		}
+		
+		// 获取项目分管领导所有能审核的合同
 		if(authorities.contains("ROLE_PROJECT_MANAGER")){
-			list.addAll(contractMapper.getContractByState(1));
-			list.addAll(contractMapper.getContractByState(4));
+			list.addAll(contractMapper.getContractByState(1)); // 预登记审批
+			list.addAll(contractMapper.getContractByState(4)); // 正式登记审批
 		}
 		return list;
 	}
@@ -251,12 +276,16 @@ public class ContractServiceImpl implements ContractService {
 	@Override
 	public List<Map<String, Object>> getRegisterContracts() throws Exception {
 		String username = Util.loginUsername();
+		
+		// 获取等待该经办人正式登记的所有合同
 		List<Map<String, Object>> list = contractMapper.getContractByStateAndOperator(2, username);
 		return list;
 	}
 	@Override
 	public List<Map<String, Object>> getExecuteContracts() throws Exception {
 		String username = Util.loginUsername();
+		
+		// 获取等待该经办人执行的所有合同
 		List<Map<String, Object>> list = new ArrayList<>();
 		list.addAll(contractMapper.getPayNodeByStateAndOperator(1, username));
 		list.addAll(contractMapper.getReceiveNodeByStateAndOperator(1, username));
