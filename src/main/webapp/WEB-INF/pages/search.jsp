@@ -139,8 +139,7 @@
 							name="sort-type" value=0 checked=checked>履行期限（始）<br>
 							<input type="radio" name="sort-type" value=1>履行期限（终）<br>
 							<!-- <input type="radio" name="sort-type" value=2>计划付款日期<br>  -->
-							<!-- <input type="radio" name="sort-type" value=3>计划收款日期 -->
-						</td>
+							<!-- <input type="radio" name="sort-type" value=3>计划收款日期 --></td>
 						<td class="table-key-width">排序</td>
 						<td class="table-value-width"><input type="radio"
 							name="sort-order" value=0 checked=checked>升序<br> <input
@@ -157,8 +156,13 @@
 				<table id="contract-table">
 
 				</table>
+				<nav>
+					<ul class="pagination" data-pagination>
+					</ul>
+				</nav>
 			</div>
 		</div>
 	</div>
+	<div style="padding-top: 300px"></div>
 </body>
 </html>

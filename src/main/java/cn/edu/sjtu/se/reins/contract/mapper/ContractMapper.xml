@@ -277,5 +277,66 @@
 		group by contract.ContractID
 		</if>
 		order by ${SortType} ${SortOrder}
+		limit #{Offset}, #{Amount}
+	</select>
+	
+	<select id="countSearch" resultType="java.lang.Integer">
+		select count(contract.ContractID)
+		from contract
+		<if test="PayDate != null or PayType != null">
+		left join paynode on contract.ContractID=paynode.ContractID
+		</if>
+		<if test="ReceiveDate != null">
+		left join receivenode on contract.ContractID=receivenode.ContractID
+		</if>
+		where 1=1
+		<if test="Number != null">
+		and Number like #{Number}
+		</if>
+		<if test="Name != null">
+		and Name like #{Name}
+		</if>
+		<if test="Operator != null">
+		and Operator like #{Operator}
+		</if>
+		<if test="ProjectNumber != null">
+		and ProjectNumber like #{ProjectNumber}
+		</if>
+		<if test="BudgetNumber != null">
+		and BudgetNumber like #{BudgetNumber}
+		</if>
+		<if test="FinancialFlow != null">
+		and FinancialFlow = #{FinancialFlow}
+		</if>
+		<if test="FundsType != null">
+		and FundsType = #{FundsType}
+		</if>
+		<if test="PayType != null">
+		and PayType = #{PayType}
+		</if>
+		<if test="IsForeignContract != null">
+		and IsForeignContract = #{IsForeignContract}
+		</if>
+		<if test="SubjectObjects != null">
+		and SubjectObjects like #{SubjectObjects}
+		</if>
+		<if test="Departments != null">
+		and Departments like #{Departments}
+		</if>
+		<if test="StartDate != null">
+		and StartDate = #{StartDate}
+		</if>
+		<if test="EndDate != null">
+		and EndDate = #{EndDate}
+		</if>
+		<if test="PayDate != null">
+		and PayDate = #{PayDate}
+		</if>
+		<if test="ReceiveDate != null">
+		and ReceiveDate = #{ReceiveDate}
+		</if>
+		<if test="PayDate != null or PayType != null or ReceiveDate != null">
+		group by contract.ContractID
+		</if>
 	</select>
 </mapper>

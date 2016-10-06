@@ -429,12 +429,21 @@ public class ContractServiceImpl implements ContractService {
 		parameter.put("SortOrder", sortOrder);
 
 		System.out.println(parameter);
-		
+
+		int total = contractMapper.countSearch(parameter);
 		List<Map<String, Object>> contracts = contractMapper.search(parameter);
+		System.out.println(total);
 		System.out.println(contracts);
-		
+
+		Map<String, Object> pageInfo = new HashMap<>();
+		pageInfo.put("CurrPage", currPage);
+		pageInfo.put("PerPage", perPage);
+		pageInfo.put("Total", total);
+		pageInfo.put("Pages", (total + perPage - 1) / perPage);
+
 		Map<String, Object> result = new HashMap<>();
 		result.put("Contracts", contracts);
+		result.put("PageInfo", pageInfo);
 		return result;
 	}
 

@@ -128,4 +128,11 @@ public interface ContractMapper {
 	 * @return
 	 */
 	List<Map<String, Object>> search(Map<String, Object> map);
+	
+	/**
+	 * 统计搜索結果的行数
+	 * @param map
+	 * @return
+	 */
+	Integer countSearch(Map<String, Object> map);
 }
