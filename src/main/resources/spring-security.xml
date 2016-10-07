@@ -60,29 +60,68 @@
 		<!-- 执行收款节点页面，合同经办人能够访问 -->
 		<security:intercept-url pattern="/receive-register/*"
 			access="hasRole('ROLE_OPERATOR')" />
-<!-- 		<security:intercept-url pattern="/create-contract" -->
-<!-- 			access="!hasRole('ROLE_ANONYMOUS')" /> -->
-<!-- 		<security:intercept-url pattern="/list-contracts" -->
-<!-- 			access="!hasRole('ROLE_ANONYMOUS')" /> -->
-<!-- 		<security:intercept-url pattern="/view-contract/*" -->
-<!-- 			access="!hasRole('ROLE_ANONYMOUS')" /> -->
-<!-- 		<security:intercept-url pattern="/get-contracts" -->
-<!-- 			access="!hasRole('ROLE_ANONYMOUS')" /> -->
-<!-- 		<security:intercept-url pattern="/get-contract" -->
-<!-- 			access="!hasRole('ROLE_ANONYMOUS')" /> -->
-<!-- 		<security:intercept-url pattern="/comment-contract" -->
-<!-- 			access="!hasRole('ROLE_ANONYMOUS')" /> -->
-<!-- 		<security:intercept-url pattern="/comment-contract/*" -->
-<!-- 			access="!hasRole('ROLE_ANONYMOUS')" /> -->
+		<!-- =======================以上是页面URL的权限配置=================== -->
+		
+		
+		<!-- =======================以下是AJAX URL的权限配置=================== -->
+		<!-- 创建一个合同（预登记），合同经办人能够访问 -->
+		<security:intercept-url pattern="/create-contract"
+			access="hasRole('ROLE_OPERATOR')" />
+		<!-- 正式登记一个合同，合同经办人能够访问 -->
+		<security:intercept-url pattern="/register-contract"
+			access="hasRole('ROLE_OPERATOR') || hasRole('ROLE_CONTRACT_MANAGER') || hasRole('ROLE_PROJECT_MANAGER')" />
+		<!-- 执行支付节点，合同经办人能够访问 -->
+		<security:intercept-url pattern="/execute-pay"
+			access="hasRole('ROLE_OPERATOR') || hasRole('ROLE_CONTRACT_MANAGER') || hasRole('ROLE_PROJECT_MANAGER')" />
+		<!-- 执行付款节点，合同经办人能够访问 -->
+		<security:intercept-url pattern="/execute-receive"
+			access="hasRole('ROLE_OPERATOR') || hasRole('ROLE_CONTRACT_MANAGER') || hasRole('ROLE_PROJECT_MANAGER')" />
+		<!-- 搜索，普通角色都能够访问 -->
+		<security:intercept-url pattern="/search"
+			access="hasRole('ROLE_OPERATOR') || hasRole('ROLE_CONTRACT_MANAGER') || hasRole('ROLE_PROJECT_MANAGER')" />
+		<!-- 获取用户和权限信息，只有ADMIN能够访问 -->
+		<security:intercept-url pattern="/users"
+			access="hasRole('ROLE_ADMIN')" />
+		<!-- 为用户添加权限，只有ADMIN能够访问 -->
+		<security:intercept-url pattern="/add-role"
+			access="hasRole('ROLE_ADMIN')" />
+		<!-- 为用户删除权限，只有ADMIN能够访问 -->
+		<security:intercept-url pattern="/remove-role"
+			access="hasRole('ROLE_ADMIN')" />
+		<!-- 获取所有合同，该接口以废弃，拒绝访问 -->
+		<security:intercept-url pattern="/get-contracts"
+			access="denyAll" />
+		<!-- 获取等待审批的合同列表，合同管理员和项目分管领导能够访问 -->
+		<security:intercept-url pattern="/get-verify-contracts"
+			access="hasRole('ROLE_CONTRACT_MANAGER') || hasRole('ROLE_PROJECT_MANAGER')" />
+		<!-- 获取等待执行的合同列表，合同经办人能够访问 -->
+		<security:intercept-url pattern="/get-execute-contracts"
+			access="hasRole('ROLE_OPERATOR')" />
+		<!-- 获取等待正式登记的合同列表，合同经办人能够访问 -->
+		<security:intercept-url pattern="/get-register-contracts"
+			access="hasRole('ROLE_OPERATOR')" />
+		<!-- 获取一个合同的详细内容，普通角色都能够访问 -->
+		<security:intercept-url pattern="/get-contract"
+			access="hasRole('ROLE_OPERATOR') || hasRole('ROLE_CONTRACT_MANAGER') || hasRole('ROLE_PROJECT_MANAGER')" />
+		<!-- 审核一个合同，合同管理员和项目分管领导能够访问 -->
+		<security:intercept-url pattern="/comment-contract"
+			access="hasRole('ROLE_CONTRACT_MANAGER') || hasRole('ROLE_PROJECT_MANAGER')" />
+		<!-- =======================以上是AJAX URL的权限配置=================== -->
+		
+		<!-- 静态资源都能访问 -->
 		<security:intercept-url pattern="/js/**"
 			access="permitAll" />
 		<security:intercept-url pattern="/css/**"
 			access="permitAll" />
-		<security:intercept-url pattern="/test.json"
-			access="permitAll" />
+		<security:intercept-url pattern="/fonts/**"
+			access="permitAll" /> 
+		
+		<!-- 注销页面都能访问 -->
 		<security:intercept-url pattern="/logout"
 			access="permitAll" />
-		<security:intercept-url pattern="/**" access="!hasRole('ROLE_ANONYMOUS')" />
+		
+		<!-- 其他未配置的url都拒绝访问 -->
+		<security:intercept-url pattern="/**" access="denyAll" />
 
 		<security:form-login default-target-url="/index"></security:form-login>
 
