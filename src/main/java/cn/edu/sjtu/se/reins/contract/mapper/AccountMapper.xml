@@ -15,4 +15,37 @@
 		where account_role_rel.EmployeeNumber = #{Username};
 	</select>
 	
+	<select id="getAccounts" resultType="map">
+		select EmployeeNumber as Username, EmployeeEmail as Email
+		from employee
+		<if test="Username != null">
+		where EmployeeNumber like #{Username}
+		</if>
+		limit #{Offset}, #{Amount};
+	</select>
+	
+	
+	<select id="countAccounts" resultType="java.lang.Integer">
+		select count(EmployeeNumber)
+		from employee
+		<if test="Username != null">
+		where EmployeeNumber like #{Username}
+		</if>
+	</select>
+	
+	<insert id="addRoleRel">
+		insert into account_role_rel(EmployeeNumber, RoleID)
+		values(#{Username}, #{RoleID});
+	</insert>
+	
+	<delete id="removeRoleRel">
+		delete from account_role_rel
+		where EmployeeNumber=#{Username}
+			and RoleID=#{RoleID}
+	</delete>
+	
+	<select id="getRole" resultType="map">
+		select * from contract_role
+		where RoleName=#{RoleName}
+	</select>
 </mapper>

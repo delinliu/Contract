@@ -23,5 +23,8 @@
 	<li role="presentation"
 		<%="search".equals(request.getParameter("pageTitle")) ? "class=\"active\"" : ""%>><a
 		href="<%=request.getContextPath()%>/search">搜索</a></li>
+	<li role="presentation"
+		<%="role".equals(request.getParameter("pageTitle")) ? "class=\"active\"" : ""%>><a
+		href="<%=request.getContextPath()%>/role">权限管理</a></li>
 		
 </ul>

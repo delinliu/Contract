@@ -28,6 +28,11 @@ public class ContractController {
 	public String search() {
 		return "/WEB-INF/pages/search.jsp";
 	}
+	
+	@RequestMapping(value = "/role", method = RequestMethod.GET)
+	public String role() {
+		return "/WEB-INF/pages/role.jsp";
+	}
 
 	@RequestMapping(value = "/pre-register", method = RequestMethod.GET)
 	public String preRegister() {
@@ -131,6 +136,41 @@ public class ContractController {
 	public Map<String, Object> search(@RequestBody Map<String, Object> parameters) {
 		try {
 			return Util.createMap(contractServicecImpl.search(parameters));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Util.createErrorMap("操作失败，请稍后再试或联系管理员。");
+		}
+	}
+	
+	@RequestMapping(value = "/users", method = RequestMethod.POST, consumes = "application/json")
+	@ResponseBody
+	public Map<String, Object> users(@RequestBody Map<String, Object> parameters) {
+		try {
+			return Util.createMap(contractServicecImpl.users(parameters));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Util.createErrorMap("操作失败，请稍后再试或联系管理员。");
+		}
+	}
+	
+	@RequestMapping(value = "/add-role", method = RequestMethod.POST, consumes = "application/json")
+	@ResponseBody
+	public Map<String, Object> addRole(@RequestBody Map<String, Object> parameters) {
+		try {
+			contractServicecImpl.addRole(parameters);
+			return Util.createMap(null);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Util.createErrorMap("操作失败，请稍后再试或联系管理员。");
+		}
+	}
+	
+	@RequestMapping(value = "/remove-role", method = RequestMethod.POST, consumes = "application/json")
+	@ResponseBody
+	public Map<String, Object> removeRole(@RequestBody Map<String, Object> parameters) {
+		try {
+			contractServicecImpl.removeRole(parameters);
+			return Util.createMap(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Util.createErrorMap("操作失败，请稍后再试或联系管理员。");

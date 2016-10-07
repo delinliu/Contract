@@ -7,10 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cn.edu.sjtu.se.reins.contract.mapper.AccountMapper;
 import cn.edu.sjtu.se.reins.contract.mapper.ContractMapper;
 import cn.edu.sjtu.se.reins.contract.service.ContractService;
 import cn.edu.sjtu.se.reins.contract.util.Util;
@@ -20,6 +23,9 @@ public class ContractServiceImpl implements ContractService {
 
 	@Autowired
 	private ContractMapper contractMapper;
+
+	@Resource(name = "accountMapper")
+	private AccountMapper accountMapper;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -315,8 +321,6 @@ public class ContractServiceImpl implements ContractService {
 		if (authorities.contains("ROLE_CONTRACT_MANAGER")) {
 			list.addAll(contractMapper.getContractByState(0)); // 预登记审批
 			list.addAll(contractMapper.getContractByState(3)); // 正式登记审批
-			List<Map<String, Object>> t = contractMapper.getPayNodesByState(2);
-			t = contractMapper.getReceiveNodesByState(2);
 			list.addAll(contractMapper.getPayNodesByState(2)); // 付款节点
 			list.addAll(contractMapper.getReceiveNodesByState(2)); // 收款节点
 		}
@@ -450,6 +454,89 @@ public class ContractServiceImpl implements ContractService {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public Map<String, Object> users(Map<String, Object> map) throws Exception {
+
+		Map<String, Object> parameter = new HashMap<>();
+
+		int perPage = (int) map.get("PerPage");
+		int currPage = (int) map.get("CurrPage");
+		perPage = perPage < 0 || perPage > 20 ? 20 : perPage;
+		currPage = currPage < 0 ? 0 : currPage;
+		int offset = perPage * currPage;
+		int amount = perPage;
+		parameter.put("Offset", offset);
+		parameter.put("Amount", amount);
+
+		String key = "Username";
+		if (!isEmpty(map.get(key))) {
+			parameter.put("Username", likeStr(map.get(key)));
+		}
+
+		int total = accountMapper.countAccounts(parameter);
+		List<Map<String, Object>> users = accountMapper.getAccounts(parameter);
+		for (Map<String, Object> user : users) {
+			List<Map<String, Object>> roles = accountMapper.getRoles((String) user.get("Username"));
+			user.put("Roles", roles);
+		}
+
+		Map<String, Object> pageInfo = new HashMap<>();
+		pageInfo.put("CurrPage", currPage);
+		pageInfo.put("PerPage", perPage);
+		pageInfo.put("Total", total);
+		pageInfo.put("Pages", (total + perPage - 1) / perPage);
+
+		Map<String, Object> result = new HashMap<>();
+		result.put("Users", users);
+		result.put("PageInfo", pageInfo);
+
+		return result;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void addRole(Map<String, Object> map) throws Exception {
+		if(!"admin".equals(Util.loginUsername())){
+			throw new Exception("你没有权限进行此操作");
+		}
+		String username = (String) map.get("Username");
+		String roleName = (String) map.get("Role");
+		
+		Map<String, Object> role = accountMapper.getRole(roleName);
+		if(role == null){
+			throw new Exception("操作不成功");
+		}
+		
+		int roleID = (int) role.get("RoleID");
+		Map<String, Object> parameter = new HashMap<>();
+		parameter.put("RoleID", roleID);
+		parameter.put("Username", username);
+		
+		accountMapper.addRoleRel(parameter);;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void removeRole(Map<String, Object> map) throws Exception {
+		if(!"admin".equals(Util.loginUsername())){
+			throw new Exception("你没有权限进行此操作");
+		}
+		String username = (String) map.get("Username");
+		String roleName = (String) map.get("Role");
+		
+		Map<String, Object> role = accountMapper.getRole(roleName);
+		if(role == null){
+			throw new Exception("操作不成功");
+		}
+		
+		int roleID = (int) role.get("RoleID");
+		Map<String, Object> parameter = new HashMap<>();
+		parameter.put("RoleID", roleID);
+		parameter.put("Username", username);
+		
+		accountMapper.removeRoleRel(parameter);;
 	}
 
 }

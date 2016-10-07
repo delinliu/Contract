@@ -82,5 +82,26 @@ public interface ContractService {
 	 * @throws Exception
 	 */
 	Map<String, Object> search(Map<String, Object> map) throws Exception;
-	
+
+	/**
+	 * 查询用户，分页、筛选
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	Map<String, Object> users(Map<String, Object> map) throws Exception;
+
+	/**
+	 * 为用户添加一个角色（权限）
+	 * @param map
+	 * @throws Exception
+	 */
+	void addRole(Map<String, Object> map) throws Exception;
+
+	/**
+	 * 为用户删除一个角色（权限）
+	 * @param map
+	 * @throws Exception
+	 */
+	void removeRole(Map<String, Object> map) throws Exception;
 }
