@@ -4,7 +4,7 @@ $(function() {
 	$('#search-btn').off('click').on('click', searchBtnClicked);
 	searchBtnClicked();
 });
-var PerPage = 6;
+var PerPage = 10;
 
 function search(parameter, callback) {
 	$.ajax({

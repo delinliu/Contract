@@ -33,6 +33,9 @@ public class MyLoginManager implements UserDetailsService {
 		for (Map<String, Object> role : roles) {
 			setAuths.add(new SimpleGrantedAuthority(String.valueOf(role.get("RoleName"))));
 		}
+		if("admin".equals(username)){
+			setAuths.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+		}
 		
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>(setAuths);
 		String password = String.valueOf(user.get("Password"));
